@@ -39,6 +39,7 @@ class EckEntity {
   use ManagedEntity;
 
   /**
+   * @param string $entity_type
    * @param bool $checkPermissions
    * @return \Civi\Api4\Generic\BasicBatchAction
    */
@@ -54,6 +55,7 @@ class EckEntity {
   }
 
   /**
+   * @param string $entity_type
    * @param bool $checkPermissions
    * @return \Civi\Api4\Generic\ExportAction
    */
@@ -95,40 +97,40 @@ class EckEntity {
   /**
    * @param string $entity_type
    * @param bool $checkPermissions
-   * @return \Civi\Api4\EckDAOSaveAction
+   * @return \Civi\Api4\Generic\DAOSaveAction
    */
   public static function save(string $entity_type, $checkPermissions = TRUE) {
-    return (new EckDAOSaveAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new \Civi\Api4\Generic\DAOSaveAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
   /**
    * @param string $entity_type
    * @param bool $checkPermissions
-   * @return \Civi\Api4\EckDAOCreateAction
+   * @return \Civi\Api4\Generic\DAOCreateAction
    */
   public static function create(string $entity_type, $checkPermissions = TRUE) {
-    return (new EckDAOCreateAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new \Civi\Api4\Generic\DAOCreateAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
   /**
    * @param string $entity_type
    * @param bool $checkPermissions
-   * @return \Civi\Api4\EckDAOUpdateAction
+   * @return \Civi\Api4\Generic\DAOUpdateAction
    */
   public static function update(string $entity_type, $checkPermissions = TRUE) {
-    return (new EckDAOUpdateAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new \Civi\Api4\Generic\DAOUpdateAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
   /**
    * @param string $entity_type
    * @param bool $checkPermissions
-   * @return \Civi\Api4\EckDAODeleteAction
+   * @return \Civi\Api4\Generic\DAODeleteAction
    */
   public static function delete(string $entity_type, $checkPermissions = TRUE) {
-    return (new EckDAODeleteAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new \Civi\Api4\Generic\DAODeleteAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 

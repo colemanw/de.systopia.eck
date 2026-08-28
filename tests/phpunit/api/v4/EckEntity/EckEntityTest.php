@@ -25,6 +25,13 @@ class EckEntityTest extends TestCase implements HeadlessInterface, Transactional
       ->apply();
   }
 
+  public function tearDown(): void {
+    EckEntityType::delete(FALSE)
+      ->addWhere('id', '>', 0)
+      ->execute();
+    parent::tearDown();
+  }
+
   /**
    * @covers \Civi\Api4\EckEntityType::create
    */
@@ -346,6 +353,54 @@ class EckEntityTest extends TestCase implements HeadlessInterface, Transactional
       ->execute()
       ->column('subtype', 'title');
     self::assertEquals(['Test1' => NULL, 'Test2' => NULL, 'Test3' => NULL], $savedRecords);
+  }
+
+  /**
+   * Ensure an entity named "Base" does not collide with CRM_Eck_DAO_Base.
+   *
+   * @covers \Civi\Api4\EckEntity
+   */
+  public function testAllYourBase(): void {
+    /** @var array{id: int, name: string} $entityType */
+    $entityType = EckEntityType::create(FALSE)
+      ->addValue('label', 'Base')
+      ->addValue('name', 'Base')
+      ->execute()->first();
+
+    self::assertEquals('Base', $entityType['name']);
+
+    $entity = \Civi\Api4\Entity::get(FALSE)
+      ->addWhere('name', '=', 'Eck_Base')
+      ->execute()->single();
+    self::assertEquals('CRM_Eck_DAO_EntityBase', $entity['dao']);
+    self::assertEquals('civicrm_eck_base', $entity['table_name']);
+
+    // Ensure DAO class works, is distinct from CRM_Eck_DAO_Base, and resolves reference columns
+    self::assertTrue(is_subclass_of($entity['dao'], 'CRM_Core_DAO_Base'));
+    self::assertNotEquals('CRM_Eck_DAO_Base', $entity['dao']);
+    /** @var class-string<\CRM_Core_DAO_Base> $daoClass */
+    $daoClass = $entity['dao'];
+    self::assertIsArray($daoClass::getReferenceColumns());
+
+    // Create a record for Eck_Base
+    /** @var array{id: int, title: string} $record */
+    $record = EckEntity::create('Base', FALSE)
+      ->addValue('title', 'Testing Base entity')
+      ->execute()->first();
+    self::assertNotEmpty($record['id']);
+    self::assertEquals('Testing Base entity', $record['title']);
+
+    // Get the record
+    /** @var array{title: string} $fetched */
+    $fetched = EckEntity::get('Base', FALSE)
+      ->addWhere('id', '=', $record['id'])
+      ->execute()->first();
+    self::assertEquals('Testing Base entity', $fetched['title']);
+
+    // Delete record
+    EckEntity::delete('Base', FALSE)
+      ->addWhere('id', '=', $record['id'])
+      ->execute();
   }
 
   /**
