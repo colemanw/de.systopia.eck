@@ -15,8 +15,14 @@
 
 namespace Civi\Api4;
 
+use Civi\Api4\Action\GetLinks;
+use Civi\Api4\Generic\AutocompleteAction;
 use Civi\Api4\Generic\BasicBatchAction;
+use Civi\Api4\Generic\DAOCreateAction;
+use Civi\Api4\Generic\DAODeleteAction;
 use Civi\Api4\Generic\DAOGetAction;
+use Civi\Api4\Generic\DAOSaveAction;
+use Civi\Api4\Generic\DAOUpdateAction;
 use Civi\Api4\Generic\ExportAction;
 use Civi\Api4\Generic\Traits\ManagedEntity;
 use CRM_Eck_ExtensionUtil as E;
@@ -90,7 +96,7 @@ class EckEntity {
    * @return \Civi\Api4\Generic\AutocompleteAction
    */
   public static function autocomplete(string $entity_type, $checkPermissions = TRUE) {
-    return (new \Civi\Api4\Generic\AutocompleteAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new AutocompleteAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
@@ -100,7 +106,7 @@ class EckEntity {
    * @return \Civi\Api4\Generic\DAOSaveAction
    */
   public static function save(string $entity_type, $checkPermissions = TRUE) {
-    return (new \Civi\Api4\Generic\DAOSaveAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new DAOSaveAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
@@ -110,7 +116,7 @@ class EckEntity {
    * @return \Civi\Api4\Generic\DAOCreateAction
    */
   public static function create(string $entity_type, $checkPermissions = TRUE) {
-    return (new \Civi\Api4\Generic\DAOCreateAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new DAOCreateAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
@@ -120,7 +126,7 @@ class EckEntity {
    * @return \Civi\Api4\Generic\DAOUpdateAction
    */
   public static function update(string $entity_type, $checkPermissions = TRUE) {
-    return (new \Civi\Api4\Generic\DAOUpdateAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new DAOUpdateAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
@@ -130,7 +136,7 @@ class EckEntity {
    * @return \Civi\Api4\Generic\DAODeleteAction
    */
   public static function delete(string $entity_type, $checkPermissions = TRUE) {
-    return (new \Civi\Api4\Generic\DAODeleteAction('Eck_' . $entity_type, __FUNCTION__))
+    return (new DAODeleteAction('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
@@ -158,7 +164,7 @@ class EckEntity {
    * @return \Civi\Api4\Action\GetLinks
    */
   public static function getLinks(string $entity_type, bool $checkPermissions = TRUE) {
-    return (new \Civi\Api4\Action\GetLinks('Eck_' . $entity_type, __FUNCTION__))
+    return (new GetLinks('Eck_' . $entity_type, __FUNCTION__))
       ->setCheckPermissions($checkPermissions);
   }
 
