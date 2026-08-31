@@ -134,11 +134,11 @@ class EckEntityTest extends TestCase implements HeadlessInterface, Transactional
     $firstEntity = $this->createEntity(['one' => 'One', 'two' => 'Two']);
     $secondEntity = $this->createEntity(['one' => 'One', 'three' => 'Three']);
 
-    // Ensure api_name and sub_types are correctly returned from the API
+    // Ensure api_name, table_name and sub_types are correctly returned from the API
     try {
-      /** @phpstan-var array<string, array{"sub_types:label": string, "sub_types:name": string}> $entityTypes */
+      /** @phpstan-var array<string, array{"sub_types:label": string, "sub_types:name": string, "table_name": string}> $entityTypes */
       $entityTypes = \Civi\Api4\EckEntityType::get(FALSE)
-        ->addSelect('api_name', 'sub_types:label', 'sub_types:name')
+        ->addSelect('api_name', 'table_name', 'sub_types:label', 'sub_types:name')
         ->execute()
         ->indexBy('api_name')
         ->getArrayCopy();
@@ -146,6 +146,8 @@ class EckEntityTest extends TestCase implements HeadlessInterface, Transactional
     catch (DBQueryException $e) {
       static::fail($e->getDebugInfo());
     }
+    self::assertEquals(\_eck_get_table_name(substr($firstEntity, 4)), $entityTypes[$firstEntity]['table_name']);
+    self::assertEquals(\_eck_get_table_name(substr($secondEntity, 4)), $entityTypes[$secondEntity]['table_name']);
     self::assertEquals(['One', 'Two'], $entityTypes[$firstEntity]['sub_types:label']);
     self::assertEquals(['one', 'two'], $entityTypes[$firstEntity]['sub_types:name']);
     self::assertEquals(['One', 'Three'], $entityTypes[$secondEntity]['sub_types:label']);
